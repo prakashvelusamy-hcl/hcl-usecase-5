@@ -51,7 +51,8 @@ jobs:
       - name: Install Terraform Docs
         run: |
           wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-linux-amd64.tar.gz         
-          tar -xvzf terraform-docs-v0.16.0-linux-amd64.tar.gz        
+          tar -xvzf terraform-docs-v0.16.0-linux-amd64.tar.gz
+          pwd     
           mv terraform-docs /usr/local/bin/
 
       - name: Verify Terraform Docs Installation
