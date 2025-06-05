@@ -62,8 +62,8 @@ jobs:
           ls -la
       - name: Generate Terraform Docs
         run: |
-          chmod +x terraform-docs.sh
-          ./terraform-docs.sh
+          chmod +x terraform-docs
+          ./terraform-docs
 
       - name: Comment Terraform Docs
         if: github.event_name == 'pull_request'
