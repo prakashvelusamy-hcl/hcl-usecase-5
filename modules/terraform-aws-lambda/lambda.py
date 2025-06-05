@@ -9,7 +9,7 @@ sns = boto3.client('sns')
 
 bucket_1 = 'prakash-hcl-non-resize'
 bucket_2 = 'prakash-hcl-resized' 
-sns_topic_arn = 'arn:aws:sns:ap-south-1:804937851364:image-resizing-topic' # your-sns-topic
+sns_topic_arn = 'arn:aws:sns:ap-south-1:495599733393:user-updates-topic'
 
 def lambda_handler(event, context):
     if 'Records' in event:
