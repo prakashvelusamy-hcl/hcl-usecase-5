@@ -9,7 +9,8 @@ sns = boto3.client('sns')
 
 bucket_1 = 'prakash-hcl-non-resize'
 bucket_2 = 'prakash-hcl-resized' 
-sns_topic_arn = 'arn:aws:sns:ap-south-1:495599733393:user-updates-topic'
+
+sns_topic_arn = os.environ['SNS_TOPIC_ARN']
 
 def lambda_handler(event, context):
     if 'Records' in event:

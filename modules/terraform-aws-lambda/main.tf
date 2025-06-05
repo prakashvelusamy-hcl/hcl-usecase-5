@@ -1,3 +1,13 @@
+resource "aws_sns_topic" "user_updates" {
+  name = "user-updates-topic"
+}
+
+resource "aws_sns_topic_subscription" "user_updates_email" {
+topic_arn = aws_sns_topic.user_updates.arn 
+protocol = "email"
+endpoint = "prakashvelusamy1999@gmail.com"
+}
+
 data "archive_file" "lambda" {
   type        = "zip"
   source_file = "${path.module}/image_resizer.py"
@@ -13,8 +23,13 @@ resource "aws_lambda_function" "lambda" {
 
    layers       = ["arn:aws:lambda:ap-south-1:770693421928:layer:Klayers-p39-pillow:1"]
   source_code_hash = data.archive_file.lambda.output_base64sha256
-
   runtime = "python3.9"
+  
+  environment {
+     variables = {
+     SNS_TOPIC_ARN = aws_sns_topic.user_updates.arn
+     }
+}
 }
 
 
@@ -78,17 +93,6 @@ resource "aws_iam_policy" "lambda_s3_sns" {
 resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
   role       = aws_iam_role.iam_for_lambda.name
   policy_arn = aws_iam_policy.lambda_s3_sns.arn
-}
-
-resource "aws_sns_topic" "user_updates" {
-  name = "user-updates-topic"
-}
-
-
-resource "aws_sns_topic_subscription" "user_updates_email" {
-topic_arn = aws_sns_topic.user_updates.arn 
-protocol = "email"
-endpoint = "prakashvelusamy1999@gmail.com"
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
