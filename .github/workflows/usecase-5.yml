@@ -13,17 +13,16 @@ on:
         type: choice
         options:
           - destroy
-          - apply
+          - apply 
 
 permissions:
   id-token: write
   contents: write
 
 jobs:
-  terraform-apply:
-    name: Terraform Apply
+  terraform:
+    name: Terraform Apply or Destroy
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,35 +45,45 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
+        id: plan
         run: terraform plan -out=tfplan
 
+      - name: Install Terraform Docs
+        run: |
+          wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-linux-amd64.tar.gz         
+          tar -xvzf terraform-docs-v0.16.0-linux-amd64.tar.gz
+          pwd     
+          mv terraform-docs /usr/local/bin/
+
+      - name: Verify Terraform Docs Installation
+        run: terraform-docs --version
+      # - name: Print directory structure with details
+      #   run: |
+      #     pwd
+      #     ls -la
+      - name: Generate Terraform Docs
+        run: |
+          terraform-docs markdown table ./modules/terraform-aws-s3 > terraform-docs.md
+      - name: Comment Terraform Docs
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: terraform-docs.md
+
+      # Conditional Apply or Destroy Based on Workflow Dispatch Input
       - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
         run: terraform apply -auto-approve tfplan
 
-  terraform-destroy:
-    name: Terraform Destroy
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::495599733393:role/OIDC
-          aws-region: ap-south-1
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.6
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Validate
-        run: terraform validate
-
       - name: Terraform Destroy
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve
+
+      # Optional: Run apply automatically when push to master contains specific commit message
+      - name: Terraform Apply (auto)
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'terraform apply')
+        run: terraform apply -auto-approve tfplan
+
+      - name: Terraform Destroy (auto)
+        if: github.event_name == 'push' && contains(github.event.head_commit.message, 'terraform destroy')
         run: terraform destroy -auto-approve
