@@ -8,4 +8,5 @@ module "lambda" {
     source = "./modules/terraform-aws-lambda"
     bucket_1 = var.bucket_1
     bucket_2 = var.bucket_2
+    bucket_id = module.s3.raw-bucket_id
 }
