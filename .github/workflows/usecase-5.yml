@@ -13,7 +13,7 @@ on:
         type: choice
         options:
           - destroy
-          - apply  # Added this to make it a choice between apply and destroy
+          - apply 
 
 permissions:
   id-token: write
