@@ -15,4 +15,5 @@ module "lambda" {
 module "sns" {
     source = "./modules/terraform-aws-sns"
     sns_arn = var.sns_topic_arn
+    sns_endpoint = var.sns_endpoint
 }
