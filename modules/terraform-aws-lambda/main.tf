@@ -6,7 +6,7 @@ data "archive_file" "lambda" {
 
 
 resource "aws_lambda_function" "lambda" {
-  filename      = "image_resizer.zip"
+  filename      = "${path.module}/image_resizer.zip"
   function_name = "lambda_function"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "image_resizer.lambda_handler"
