@@ -62,10 +62,12 @@ jobs:
           git add README.md
           git commit -m "Update Terraform docs [skip ci]" || echo "No changes to commit"
           git push
+      # - name: Terraform Apply
+      #   if: contains(github.event.head_commit.message, 'terraform apply')
+      #   run: terraform apply -auto-approve 
       - name: Terraform Apply
-        if: contains(github.event.head_commit.message, 'terraform apply')
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'apply'
         run: terraform apply -auto-approve 
-
       - name: Terraform Destroy
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'destroy'
         run: terraform destroy -auto-approve 
