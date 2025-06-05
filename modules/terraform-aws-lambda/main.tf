@@ -9,9 +9,9 @@ resource "aws_lambda_function" "lambda" {
   filename      = "lambda_function_payload.zip"
   function_name = "lambda_function"
   role          = aws_iam_role.iam_for_lambda.arn
-  handler       = "lambda_function.lambda_handler"
+  handler       = "image_resizer.lambda_handler"
 
-   layers                         = ["arn:aws:lambda:ap-south-1:770693421928:layer:Klayers-p39-pillow:1"]
+   layers       = ["arn:aws:lambda:ap-south-1:770693421928:layer:Klayers-p39-pillow:1"]
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
   runtime = "python3.9"
