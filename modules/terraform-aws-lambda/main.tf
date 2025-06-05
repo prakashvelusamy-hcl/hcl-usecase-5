@@ -21,9 +21,9 @@ resource "aws_lambda_function" "lambda" {
 resource "aws_lambda_permission" "allow_s3" {
 statement_id = "AllowS3Invoke" 
 action       = "lambda:InvokeFunction"
-function_name = aws_lambda_function.Lambda.function_name
+function_name = aws_lambda_function.lambda.function_name
 principal     = "s3.amazonaws.com"
-source_arn     = aws_s3_bucket.source_bucket.arn
+source_arn     = "arn:aws:s3:::prakash-hcl-non-resized" #aws_s3_bucket.source_bucket.arn
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
