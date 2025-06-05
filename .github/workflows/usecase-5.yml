@@ -46,6 +46,24 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan 
+             - name: Install terraform-docs
+        run: |
+          curl -sSLo terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.17.0/terraform-docs-v0.17.0-$(uname)-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz
+          sudo mv terraform-docs /usr/local/bin/
+
+      - name: Generate Terraform Docs
+        run: terraform-docs markdown table . > README.md
+
+      - name: Commit and Push README.md
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --cached --quiet || git commit -m "docs: update terraform docs in README"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.PRAKASH_HCL_SECRET }}
 
       - name: Terraform Apply
         if: contains(github.event.head_commit.message, 'terraform apply')
