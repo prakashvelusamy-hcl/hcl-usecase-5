@@ -9,4 +9,10 @@ module "lambda" {
     bucket_1 = var.bucket_1
     bucket_2 = var.bucket_2
     bucket_id = module.s3.bucket_id
+    sns_arn = module.sns.sns_arn
+}
+
+module "sns" {
+    source = "./modules/terraform-aws-sns"
+    sns_arn = var.sns_topic_arn
 }

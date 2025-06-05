@@ -1,13 +1,3 @@
-resource "aws_sns_topic" "user_updates" {
-  name = "user-updates-topic"
-}
-
-resource "aws_sns_topic_subscription" "user_updates_email" {
-topic_arn = aws_sns_topic.user_updates.arn 
-protocol = "email"
-endpoint = "prakashvelusamy1999@gmail.com"
-}
-
 data "archive_file" "lambda" {
   type        = "zip"
   source_file = "${path.module}/image_resizer.py"
@@ -27,7 +17,7 @@ resource "aws_lambda_function" "lambda" {
   
   environment {
      variables = {
-     SNS_TOPIC_ARN = aws_sns_topic.user_updates.arn
+     SNS_TOPIC_ARN = var.sns_arn
      }
 }
 }

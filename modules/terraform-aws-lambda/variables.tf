@@ -10,3 +10,7 @@ variable "bucket_id" {
     description = "Bucket Id"
     type = string
 }
+variable "sns_arn" {
+    description = "Bucket Arn"
+     type = string
+}
