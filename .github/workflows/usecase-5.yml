@@ -46,22 +46,30 @@ jobs:
 
       - name: Terraform Plan
         run: terraform plan 
-      - name: Install terraform-docs
+      - name: Install Terraform Docs
         run: |
-          curl -sSLo terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.17.0/terraform-docs-v0.17.0-$(uname)-amd64.tar.gz
-          tar -xzf terraform-docs.tar.gz
-          sudo mv terraform-docs /usr/local/bin/
+           wget https://github.com/terraform-docs/terraform-docs/releases/download/v0.16.0/terraform-docs-v0.16.0-linux-amd64.tar.gz         
+           tar -xvzf terraform-docs-v0.16.0-linux-amd64.tar.gz        
+           mv terraform-docs /usr/local/bin/
+      - name: Verify Terraform Docs Installation
+        run: terraform-docs --version
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -out=tfplan
       - name: Generate Terraform Docs
         run: |
-          terraform-docs markdown table . > README.md
- 
-      - name: Commit Terraform Docs
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add README.md
-          git commit -m "Update Terraform docs [skip ci]" || echo "No changes to commit"
-          git push
+          chmod +x terraform-docs.sh
+          ./terraform-docs.sh
+      - name: Comment Terraform Docs
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          path: terraform-docs.md
+      - name: Apply Terraform
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve tfplan
       - name: Terraform Apply
         if: contains(github.event.head_commit.message, 'terraform apply')
         run: terraform apply -auto-approve
