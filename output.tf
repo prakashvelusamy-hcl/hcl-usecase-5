@@ -1,4 +1,3 @@
-output "raw-bucket_id" {
-description = "Raw bucket id"
+output "raw_bucket_id" {
 value = module.s3.bucket_id
 }
