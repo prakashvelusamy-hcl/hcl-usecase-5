@@ -1,4 +1,4 @@
 output "raw-bucket_id" {
 description = "Raw bucket id"
-value = module.lambda.bucket_id
+value = module.s3.bucket_id
 }
