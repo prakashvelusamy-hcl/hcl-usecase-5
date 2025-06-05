@@ -37,7 +37,11 @@ resource "aws_iam_role" "iam_for_lambda" {
       }
     ]
   })
-}resource "aws_iam_policy" "lambda_s3_sns" {
+}
+
+
+
+resource "aws_iam_policy" "lambda_s3_sns" {
   name        = "lambda_s3_sns_full_access"
   description = "Grants full access to S3, SNS, and Lambda services"
 
