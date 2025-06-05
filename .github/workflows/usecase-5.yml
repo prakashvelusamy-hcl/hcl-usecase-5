@@ -57,14 +57,13 @@ jobs:
 
       - name: Verify Terraform Docs Installation
         run: terraform-docs --version
-      - name: Print directory structure with details
-        run: |
-          pwd
-          ls -la
+      # - name: Print directory structure with details
+      #   run: |
+      #     pwd
+      #     ls -la
       - name: Generate Terraform Docs
         run: |
-          terraform-docs
-
+          terraform-docs terraform-docs markdown table ./modules/terraform-aws-s3 > terraform-docs.md
       - name: Comment Terraform Docs
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
