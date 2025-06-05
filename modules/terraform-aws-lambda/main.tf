@@ -33,3 +33,14 @@ resource "aws_lambda_function" "lambda" {
 
   runtime = "python3.11"
 }
+
+resource "aws_sns_topic" "user_updates" {
+  name = "user-updates-topic"
+}
+
+
+resource "aws_sns_topic_subscription" "user_updates_email" {
+  topic_arn = aws_sns_topic.user_updates.arn
+  protocol  = "prakashvelusamy1999@gmail.com"
+  endpoint  = "your-email@example.com"
+}
