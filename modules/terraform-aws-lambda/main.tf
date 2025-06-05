@@ -13,7 +13,7 @@ resource "aws_lambda_function" "lambda" {
 
   source_code_hash = data.archive_file.lambda.output_base64sha256
 
-  runtime = "python3.11"
+  runtime = "python3.9"
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
