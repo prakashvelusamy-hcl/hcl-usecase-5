@@ -57,7 +57,7 @@ jobs:
 
       - name: Verify Terraform Docs Installation
         run: terraform-docs --version
-      # - name: Print directory structure with details
+      ## - name: Print directory structure with details
       #   run: |
       #     pwd
       #     ls -la
